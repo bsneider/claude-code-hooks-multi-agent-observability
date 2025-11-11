@@ -1,0 +1,42 @@
+{
+  "__inputs": [],
+  "__requires": [],
+  "annotations": { "list": [] },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 1,
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Total Cost (USD)",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "targets": [{ "expr": "sum(claude_code_cost_usage_total)", "legendFormat": "Total Cost" }],
+      "options": { "reduceOptions": { "calcs": ["last"], "fields": "" }, "textMode": "auto", "colorMode": "value", "graphMode": "area", "unit": "currencyUSD" }
+    },
+    {
+      "type": "stat",
+      "title": "Total Sessions",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "targets": [{ "expr": "sum(claude_code_session_count_total)" }],
+      "options": { "reduceOptions": { "calcs": ["last"], "fields": "" }, "textMode": "auto", "colorMode": "value", "graphMode": "area" }
+    },
+    {
+      "type": "piechart",
+      "title": "Token Usage by Type",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "targets": [{ "expr": "sum by (type) (claude_code_token_usage_total)" }],
+      "options": { "displayLabels": ["name", "percent"], "pieType": "donut" }
+    },
+    {
+      "type": "logs",
+      "title": "Latest Tool Decisions & API Errors",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [{ "datasource": { "type": "loki", "uid": "Loki" }, "expr": "{job=\"otel-collector\"} | json | event_name=~\"claude_code.tool_decision|claude_code.api_error\"" }],
+      "options": { "showTime": true, "showLabels": true, "wrapLines": true, "prettifyLogMessage": true }
+    }
+  ],
+  "refresh": "10s",
+  "time": { "from": "now-1h", "to": "now" },
+  "title": "Claude Code Observability V2"
+}
